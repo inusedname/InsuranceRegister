@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>Bảo hiểm xã hội</title>
+
+    <!-- slider stylesheet -->
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.css}" />
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan|Dosis:400,600,700|Poppins:400,600,700&display=swap"
+          rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/style.scss" rel="stylesheet" />
+
+    <link href="css/responsive.css" rel="stylesheet" />
+    <style>
+        input[type="text"],
+        input[type="date"],
+        input[type="tel"],
+        input[type="email"],
+        select {
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 8px;
+            width: 100%;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+<div>
+    <!-- header section strats -->
+    <header class="header_section">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg custom_nav-container">
+                <a class="navbar-brand" href="index.html">
+                    <img style="border-radius: 50%" src="images/bhxh.png" alt="" />
+                    <div style="margin-left: 30px">
+                        <div>Giao dịch điện tử</div>
+                        <div>Bảo hiểm xã hội</div>
+                    </div>
+                </a>
+                <div class="contact_nav" id="">
+                    <ul class="navbar-nav ">
+                        <li class="nav-item">
+                            <a class="nav-link" href="">
+                                <img src="images/location.png" alt="" />
+                                <span>Vị trí</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <img src="images/call.png" alt="" />
+                                <span>+ 01 1234567890</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <img src="images/envelope.png" alt="" />
+                                <span>demo@gmail.com</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+    </header>
+    <!-- end header section -->
+    <!-- slider section -->
+    <section class="position-relative">
+        <div class="container">
+            <div class="custom_nav2">
+                <nav class="navbar navbar-expand-lg custom_nav-container ">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <div class="d-flex  flex-column flex-lg-row align-items-center">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#" th:if="${session.user != null}">
+                                        <span th:text="${session.user.fullname}"></span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="home">Home <span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item" th:unless="${session.user != null}">
+                                    <a class="nav-link" href="login.html">Login</a>
+                                </li>
+                                <li class="nav-item active" th:if="${session.user != null}">
+                                    <a class="nav-link" href="registration">Đăng ký tham gia BHXH tự nguyện</a>
+                                </li>
+                                <li class="nav-item" th:if="${session.user != null}">
+                                    <a class="nav-link" href="insurance">Đóng tiền</a>
+                                </li>
+                                <li class="nav-item" th:if="${session.user != null}">
+                                    <a class="nav-link" href="registration">Đăng kí người dùng</a>
+                                </li>
+                                <li class="nav-item" th:if="${session.user != null}">
+                                    <a class="nav-link" id="btn-sign-out" href="user/signout">Đăng xuất</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </section>
+</div>
+
+<section class="contact_section layout_padding">
+    <div class="container">
+        <div class="heading_container">
+            <h2>
+                <span> Đăng ký tham gia BHXH tự nguyện </span>
+            </h2>
+        </div>
+        <div class="layout_padding2-top">
+            <div class="row">
+                <div class="container ">
+                    <form action="#" th:action="@{/registration}" method="post">
+                        <div class="row">
+                            <div class="col-3">
+                                <label for="soCCCD">Số CCCD:</label>
+                                <input type="text" id="soCCCD" th:value="${session.user.citizen}" disabled/>
+                            </div>
+                            <div class="col-3">
+                                <label for="hoTen">Họ và Tên:</label>
+                                <input type="text" id="hoTen" th:value="${session.user.fullname}" disabled/>
+                            </div>
+                            <div class="col-3">
+                                <label for="ngaySinh">Ngày Sinh:</label>
+                                <input type="date" id="ngaySinh" th:value="${session.user.birthday}" disabled/>
+                            </div>
+                            <div class="col-3">
+                                <label for="gioiTinh">Giới Tính:</label>
+                                <select id="gioiTinh" th:value="${session.user.sex}" disabled>
+                                    <option value="0"> Nam </option>
+                                    <option value="1"> Nữ </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-3">
+                                <label for="soDienThoai">Số Điện Thoại:</label>
+                                <input type="tel" id="soDienThoai" th:value="${session.user.phoneNumber}" disabled />
+                            </div>
+                            <div class="col-3">
+                                <label for="maSoBHXH">Mã Số BHXH:</label>
+                                <input type="text" id="maSoBHXH" th:value="${session.user.username}" disabled />
+                            </div>
+                            <div class="col-3">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" th:value="${session.user.email}" disabled />
+                            </div>
+                            <div class="col-3">
+                                <label for="noiO">Nơi Ở:</label>
+                                <input type="text" id="noiO" th:value="${session.user.domestic}" disabled />
+                            </div>
+                        </div>
+                        <div class="p-5"> --------------------------------------------------------------------- </div>
+                        <div class="row mt-3">
+                            <div class="col-3">
+                                <label for="doiTuong"> Đối tượng </label>
+                                <select id="doiTuong">
+                                    <option value="0"> Khác </option>
+                                    <option value="1"> Hộ cận nghèo </option>
+                                    <option value="2"> Hộ nghèo </option>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <label for="thuNhapThang">Thu nhập hàng tháng:</label>
+                                <input type="text" id="thuNhapThang" placeholder="Nhập thu nhập hàng tháng"/>
+                            </div>
+                            <div class="col-3">
+                                <label for="mucTienDong">Mức tiền đóng:</label>
+                                <input type="text" id="mucTienDong" disabled />
+                            </div>
+                            <div class="col-3">
+                                <label for="soThang">Số tháng:</label>
+                                <select id="soThang" >
+                                    <option value="1"> 1 Tháng </option>
+                                    <option value="2"> 2 Tháng </option>
+                                    <option value="3"> 3 Tháng </option>
+                                    <option value="6"> 6 Tháng </option>
+                                    <option value="12"> 1 Năm </option>
+                                    <option value="24"> 2 Năm </option>
+                                    <option value="36"> 3 Năm </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-3">
+                                <label for="tinhTienDong" class="text-danger"> Số tiền cần đóng: </label>
+                                <input type="text" id="tinhTienDong" disabled />
+                            </div>
+                        </div>
+                        <button type="submit"> Đăng ký </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+
+<script>
+    function openNav() {
+        document.getElementById("myNav").classList.toggle("menu_width");
+        document
+            .querySelector(".custom_menu-btn")
+            .classList.toggle("menu_btn-style");
+    }
+
+    function getValueThuNhapThang() {
+        return parseFloat(document.getElementById('thuNhapThang').value);
+    }
+
+    function getValueSoThang() {
+        return parseInt(document.getElementById('soThang').value);
+    }
+
+    function getValueDoiTuong() {
+        return parseInt(document.getElementById('doiTuong').value);
+    }
+
+    function changeValueMucTienDong(mucTienDong) {
+        document.getElementById('mucTienDong').value = mucTienDong;
+    }
+
+    function calculateMucTienDong() {
+        const tinhTienDong = getValueThuNhapThang() * 0.22 * getValueSoThang();
+        const valDoiTuong = getValueDoiTuong();
+        const BHXHhotro = (valDoiTuong == 0 ? 33000 : (valDoiTuong == 1 ? 82500 : tinhTienDong * 99000)) * getValueSoThang();
+        const mucTienDong = tinhTienDong - BHXHhotro;
+        if(mucTienDong > 0) {
+            document.getElementById('tinhTienDong').value = mucTienDong;
+        }
+    }
+
+    document.getElementById('thuNhapThang').addEventListener('input', function() {
+        changeValueMucTienDong(getValueThuNhapThang() * 0.22);
+        calculateMucTienDong();
+    });
+
+    document.getElementById('soThang').addEventListener('change', function() {
+        calculateMucTienDong();
+    });
+
+    document.getElementById('doiTuong').addEventListener('change', function() {
+        calculateMucTienDong();
+    });
+</script>
+</body>
+
+</html>
