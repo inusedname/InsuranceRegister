@@ -1,5 +1,7 @@
 ##### JDK18
 ##### Nhập Username, Password trong mysql trong resources/application.properties
+##### URL: localhost:8080
+
 ```agsl
 CREATE DATABASE bhxh;
 
