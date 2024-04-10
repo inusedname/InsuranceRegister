@@ -22,8 +22,8 @@ public class UserService {
         return "Thêm dữ liệu thành công";
     }
 
-    public String updateUser(UpdatePayload payload, Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
+    public String updateUser(UpdatePayload payload, int id) {
+        Optional<User> optionalUser = userRepository.findById(id * 1L);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 

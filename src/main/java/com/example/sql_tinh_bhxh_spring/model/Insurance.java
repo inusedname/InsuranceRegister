@@ -3,17 +3,27 @@ package com.example.sql_tinh_bhxh_spring.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Entity
 @Setter
 @Getter
-public class Config {
+public class Insurance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
     @Column
-    public int percent;
+    public long userId;
+
+    @Column
+    public int doiTuong;
+
+    @Column
+    public double thuNhapThang;
+
+    @Column
+    public int soThang;
+
+    @Column
+    public double tinhTienDong;
 }
