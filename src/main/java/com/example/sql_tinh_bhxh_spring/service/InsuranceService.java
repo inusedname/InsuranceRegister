@@ -14,6 +14,19 @@ public class InsuranceService {
     private InsuranceRepository insuranceRepository;
 
     public void save(RegisterInsurance registerInsurance, int uid) {
+        // Logic validate
+        int valDoiTuong = registerInsurance.getDoiTuong();
+        int soThang = registerInsurance.getSoThang();
+        double thuNhapThang = registerInsurance.getThuNhapThang();
+        double BHXHhotro = (valDoiTuong == 0 ? 33000 : (valDoiTuong == 1 ? 82500 : 99000)) * soThang;
+        double tinhTienDong = thuNhapThang * 0.22 * soThang - BHXHhotro;
+
+        // Logic Mapper
+        registerInsurance.setDoiTuong(valDoiTuong);
+        registerInsurance.setSoThang(soThang);
+        registerInsurance.setThuNhapThang(thuNhapThang);
+        registerInsurance.setTinhTienDong(tinhTienDong);
+
         Insurance insurance = new Insurance();
         insurance.id = null;
         insurance.tinhTienDong = registerInsurance.getTinhTienDong();
