@@ -10,7 +10,6 @@ public class RegistrationController {
 
     @GetMapping("")
     public String registration() {
-        System.out.println("YES 2305");
         return "register";
     }
 }

@@ -152,7 +152,6 @@
         <div class="layout_padding2-top">
             <div class="row">
                 <div class="container ">
-                    <form action="#" th:action="@{/registration}" method="post">
                         <div class="row">
                             <div class="col-3">
                                 <label for="soCCCD">Số CCCD:</label>
@@ -193,40 +192,41 @@
                             </div>
                         </div>
                         <div class="p-5"> --------------------------------------------------------------------- </div>
-                        <div class="row mt-3">
-                            <div class="col-3">
-                                <label for="doiTuong"> Đối tượng </label>
-                                <select id="doiTuong">
-                                    <option value="0"> Khác </option>
-                                    <option value="1"> Hộ cận nghèo </option>
-                                    <option value="2"> Hộ nghèo </option>
-                                </select>
+                        <form action="#" th:action="@{/insurance}" method="post">
+                            <div class="row mt-3">
+                                <div class="col-3">
+                                    <label for="doiTuong"> Đối tượng </label>
+                                    <select id="doiTuong" class="doiTuong" name="doiTuong">
+                                        <option value="0"> Khác </option>
+                                        <option value="1"> Hộ cận nghèo </option>
+                                        <option value="2"> Hộ nghèo </option>
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <label for="thuNhapThang">Thu nhập hàng tháng:</label>
+                                    <input type="text" id="thuNhapThang" placeholder="Nhập thu nhập hàng tháng" name="thuNhapThang"/>
+                                </div>
+                                <div class="col-3">
+                                    <label for="mucTienDong">Mức tiền đóng:</label>
+                                    <input type="text" id="mucTienDong" disabled />
+                                </div>
+                                <div class="col-3">
+                                    <label for="soThang">Số tháng:</label>
+                                    <select id="soThang" name="soThang">
+                                        <option value="1"> 1 Tháng </option>
+                                        <option value="2"> 2 Tháng </option>
+                                        <option value="3"> 3 Tháng </option>
+                                        <option value="6"> 6 Tháng </option>
+                                        <option value="12"> 1 Năm </option>
+                                        <option value="24"> 2 Năm </option>
+                                        <option value="36"> 3 Năm </option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-3">
-                                <label for="thuNhapThang">Thu nhập hàng tháng:</label>
-                                <input type="text" id="thuNhapThang" placeholder="Nhập thu nhập hàng tháng"/>
-                            </div>
-                            <div class="col-3">
-                                <label for="mucTienDong">Mức tiền đóng:</label>
-                                <input type="text" id="mucTienDong" disabled />
-                            </div>
-                            <div class="col-3">
-                                <label for="soThang">Số tháng:</label>
-                                <select id="soThang" >
-                                    <option value="1"> 1 Tháng </option>
-                                    <option value="2"> 2 Tháng </option>
-                                    <option value="3"> 3 Tháng </option>
-                                    <option value="6"> 6 Tháng </option>
-                                    <option value="12"> 1 Năm </option>
-                                    <option value="24"> 2 Năm </option>
-                                    <option value="36"> 3 Năm </option>
-                                </select>
-                            </div>
-                        </div>
                         <div class="row mt-3">
                             <div class="col-3">
                                 <label for="tinhTienDong" class="text-danger"> Số tiền cần đóng: </label>
-                                <input type="text" id="tinhTienDong" disabled />
+                                <input type="text" id="tinhTienDong" name="tinhTienDong" disabled  />
                             </div>
                         </div>
                         <button type="submit"> Đăng ký </button>
@@ -267,7 +267,7 @@
     function calculateMucTienDong() {
         const tinhTienDong = getValueThuNhapThang() * 0.22 * getValueSoThang();
         const valDoiTuong = getValueDoiTuong();
-        const BHXHhotro = (valDoiTuong == 0 ? 33000 : (valDoiTuong == 1 ? 82500 : tinhTienDong * 99000)) * getValueSoThang();
+        const BHXHhotro = (valDoiTuong == 0 ? 33000 : (valDoiTuong == 1 ? 82500 : 99000)) * getValueSoThang();
         const mucTienDong = tinhTienDong - BHXHhotro;
         if(mucTienDong > 0) {
             document.getElementById('tinhTienDong').value = mucTienDong;

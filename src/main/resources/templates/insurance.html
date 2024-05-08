@@ -121,26 +121,25 @@
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <div class="d-flex  flex-column flex-lg-row align-items-center">
-              <ul class="navbar-nav  ">
+              <ul class="navbar-nav">
 
                 <li class="nav-item">
-                  <a class="nav-link" th:href="@{/home}">Home <span class="sr-only">(current)</span></a>
+                  <a class="nav-link" href="home">Home <span class="sr-only">(current)</span></a>
                 </li>
-
-                <li class="nav-item">
-                  <a class="nav-link" th:href="@{/login}">Login</a>
+                <li class="nav-item" th:unless="${session.user != null}">
+                  <a class="nav-link" href="login.html">Login</a>
                 </li>
-
-                <li class="nav-item active">
-                  <a class="nav-link" th:href="@{/insurance}">Tính bảo hiểm và đóng tiền</a>
+                <li class="nav-item" th:if="${session.user != null}">
+                  <a class="nav-link" href="registration">Đăng ký tham gia BHXH tự nguyện</a>
                 </li>
-
-                <li class="nav-item">
-                  <a class="nav-link" th:href="@{/register}">Khai báo thông tin</a>
+                <li class="nav-item active" th:if="${session.user != null}">
+                  <a class="nav-link" href="insurance">Đóng tiền</a>
                 </li>
-
-                <li class="nav-item" th:if="${session.userEntity.role == 1}">
-                  <a class="nav-link" th:href="@{/register}">Đăng kí người dùng</a>
+                <li class="nav-item" th:if="${session.user != null}">
+                  <a class="nav-link" href="registration">Đăng kí người dùng</a>
+                </li>
+                <li class="nav-item" th:if="${session.user != null}">
+                  <a class="nav-link" id="btn-sign-out" href="user/signout">Đăng xuất</a>
                 </li>
               </ul>
             </div>
@@ -157,17 +156,21 @@
   <div class="container">
     <div class="heading_container">
       <h2>
-        <span th:text="(${session.userEntity.role == 0}) ? 'Tính tiền bảo hiểm' : 'Đăng kí tài khoản cho người dùng'"></span>
+        <span> Đóng BHXH </span>
       </h2>
     </div>
     <div class="layout_padding2-top">
       <div class="row">
         <div class="col-md-6 ">
           <div class="container ">
-<!--            <p>Bảo hiểm xã hội của lao động nước ngoài : <span th:text="${precent}"></span></p> -->
-<!--            <p>Số tiền cần phải đóng : <span th:text="${result}"></span></p> -->
-
-
+            <div class="insurance_details">
+              <p>Đối tượng:
+                <span th:text="${insurance.doiTuong == 0 ? 'Khác' : (insurance.doiTuong == 1 ? 'Hộ Cận Nghèo' : 'Hộ Nghèo')}"></span>
+              </p>
+              <p>Số tháng đóng: <span th:text="${insurance.soThang}"></span></p>
+              <p>Thu nhập hàng tháng: <span th:text="${insurance.thuNhapThang}"></span></p>
+              <p>Số tiền đóng: <span th:text="${insurance.tinhTienDong}"></span></p>
+            </div>
           </div>
         </div>
       </div>
