@@ -179,17 +179,17 @@
                 <li class="nav-item">
                   <a class="nav-link" th:href="@{/index}">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item" th:if="${session.user != null}">
+                <li class="nav-item" th:if="${session.userEntity != null}">
                   <a class="nav-link" href="insurance">Tính bảo hiểm và đóng tiền</a>
                 </li>
-                <li class="nav-item" th:if="${session.user != null}">
+                <li class="nav-item" th:if="${session.userEntity != null}">
                   <a class="nav-link" href="registration">Đăng ký tham gia BHXH tự nguyện</a>
                 </li>
-                <li class="nav-item" th:if="${session.user != null}">
+                <li class="nav-item" th:if="${session.userEntity != null}">
                   <a class="nav-link" href="registration">Đăng kí người dùng</a>
                 </li>
-                <li class="nav-item" th:if="${session.user != null}">
-                  <a class="nav-link" id="btn-sign-out" href="user/signout">Đăng xuất</a>
+                <li class="nav-item" th:if="${session.userEntity != null}">
+                  <a class="nav-link" id="btn-sign-out" href="userEntity/signout">Đăng xuất</a>
                 </li>
               </ul>
             </div>

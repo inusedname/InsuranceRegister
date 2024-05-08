@@ -10,12 +10,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class RegisterPayload {
-    String fullname ;
-    String phoneNumber ;
-    String birthDay ;
-    String username ;
+    String bhxhId;
+    String fullName;
     String password;
-    int domestic ;
-    long salary ;
-    String citizen;
+    Long bhxhAgencyId;
+    int userType; // 0 -> HO_NGHEO, 1 -> HO_CAN_NGHEO, 2 -> KHAC
 }

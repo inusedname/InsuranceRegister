@@ -1,7 +1,7 @@
 package com.example.sql_tinh_bhxh_spring.controller;
 
-import com.example.sql_tinh_bhxh_spring.model.User;
-import com.example.sql_tinh_bhxh_spring.service.AuthenService;
+import com.example.sql_tinh_bhxh_spring.entity.UserEntity;
+import com.example.sql_tinh_bhxh_spring.service.AuthService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AuthenController {
 
     @Autowired
-    private AuthenService authenService;
+    private AuthService authService;
 
     @GetMapping
     public String loginPage() {
@@ -24,10 +24,10 @@ public class AuthenController {
     }
 
     @PostMapping
-    public String loginUser(@RequestParam String username, @RequestParam String password, HttpSession session, Model model) {
-        User user = authenService.login(username, password);
-        if(user != null) {
-            session.setAttribute("user", user);
+    public String loginUser(@RequestParam("username") String bhxhId, @RequestParam String password, HttpSession session, Model model) {
+        UserEntity userEntity = authService.login(bhxhId, password);
+        if(userEntity != null) {
+            session.setAttribute("userEntity", userEntity);
             System.out.println("Login Success !!");
             return "index";
         } else {
