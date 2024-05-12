@@ -20,6 +20,7 @@ configurations {
 repositories {
     mavenCentral()
 }
+testImplementation 'junit:junit:4.13.2'
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
