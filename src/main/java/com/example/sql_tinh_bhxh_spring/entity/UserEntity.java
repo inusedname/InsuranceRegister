@@ -55,5 +55,7 @@ public class UserEntity {
         ADMIN,
         USER
     }
+
+
 }
 

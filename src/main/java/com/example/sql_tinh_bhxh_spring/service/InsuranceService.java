@@ -44,7 +44,7 @@ public class InsuranceService {
         );
     }
 
-    private long calculateDeductedAmount(UserEntity user) {
+    public long calculateDeductedAmount(UserEntity user) {
         return switch (user.getType()) {
             case HO_NGHEO -> 99000L;
             case HO_CAN_NGHEO -> 82500L;
