@@ -31,6 +31,6 @@ public class SignUpController {
     public String postSignup(@ModelAttribute RegisterPayload payload, Model model) {
         UserEntity user = authService.createUser(payload);
         model.addAttribute("message", "success");
-        return "login";
+        return "redirect:/login";
     }
 }

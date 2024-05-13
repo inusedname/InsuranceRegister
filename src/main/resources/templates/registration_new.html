@@ -152,15 +152,15 @@
         <div class="layout_padding2-top">
             <div class="row">
                 <div class="container ">
-                    <form th:action="@{/insurance_plan_calculate}" method="get">
+                    <form th:action="@{/registration/calculate}" method="get">
                         <div class="row mt-3">
                             <div class="col-4">
-                                <label for="thuNhapThang">Thu nhập hàng tháng:</label>
-                                <input type="number" id="thuNhapThang" placeholder="1000000" name="thuNhapThang" th:value="${currentIncome}"/>
+                                <label for="baseSalary">Thu nhập hàng tháng:</label>
+                                <input type="number" id="baseSalary" placeholder="1000000" name="baseSalary" th:value="${currentIncome}"/>
                             </div>
                             <div class="col-4">
-                                <label for="soThang">Số tháng:</label>
-                                <select id="soThang" name="chuKy">
+                                <label for="plan">Số tháng:</label>
+                                <select id="plan" name="plan">
                                     <option value="1"> 1 Tháng </option>
                                     <option value="2"> 2 Tháng </option>
                                     <option value="3"> 3 Tháng </option>

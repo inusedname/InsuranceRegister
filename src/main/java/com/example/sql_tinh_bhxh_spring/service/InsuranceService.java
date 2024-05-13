@@ -1,21 +1,25 @@
 package com.example.sql_tinh_bhxh_spring.service;
 
 import com.example.sql_tinh_bhxh_spring.entity.BhxhInvoiceEntity;
+import com.example.sql_tinh_bhxh_spring.entity.BhxhSubsEntity;
 import com.example.sql_tinh_bhxh_spring.entity.UserEntity;
 import com.example.sql_tinh_bhxh_spring.model.PaymentEstimate;
 import com.example.sql_tinh_bhxh_spring.repository.BhxhInvoiceRepository;
 import lombok.AllArgsConstructor;
-import lombok.val;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 public class InsuranceService {
     private BhxhInvoiceRepository bhxhInvoiceRepository;
+    private UserService userService;
 
     public Map<Integer, String> getMonthOptions(UserEntity user) {
         Map<Integer, String> options = new HashMap<>();
@@ -30,17 +34,16 @@ public class InsuranceService {
         return options;
     }
 
-    public PaymentEstimate calculate(UserEntity user, int monthsPaying) {
+    public PaymentEstimate calculate(UserEntity user, BhxhSubsEntity subs) {
         long deducted = calculateDeductedAmount(user);
-        BhxhInvoiceEntity lastInvoice = getLatestInvoice(user).orElse(null);
+        BhxhInvoiceEntity lastInvoice = getLatestInvoice(user.id).orElse(null);
         long debtInterest = lastInvoice != null ? calculateDebtInterestAmount(lastInvoice) : 0L;
-        long basePayment = (long) (0.22 * user.getBaseSalary() * monthsPaying);
         return new PaymentEstimate(
                 deducted,
                 debtInterest,
-                user.getBaseSalary(),
+                subs.getBaseSalary(),
                 getStartDate(user),
-                getStartDate(user).plusMonths(monthsPaying)
+                getStartDate(user).plusMonths(subs.getPlan())
         );
     }
 
@@ -68,7 +71,8 @@ public class InsuranceService {
         bhxhInvoiceRepository.save(bhxhInvoiceEntity);
     }
 
-    private Optional<BhxhInvoiceEntity> getLatestInvoice(UserEntity userEntity) {
+    public Optional<BhxhInvoiceEntity> getLatestInvoice(long userId) {
+        UserEntity userEntity = userService.findById(userId).orElseThrow();
         return userEntity.getBhxhInvoiceEntities().stream()
                 .max(Comparator.comparing(BhxhInvoiceEntity::getStartDate));
     }
@@ -82,7 +86,7 @@ public class InsuranceService {
     }
 
     private LocalDate getStartDate(UserEntity userEntity) {
-        Optional<BhxhInvoiceEntity> invoice = this.getLatestInvoice(userEntity);
+        Optional<BhxhInvoiceEntity> invoice = this.getLatestInvoice(userEntity.id);
         if (invoice.isPresent()) {
             return invoice.get().getStartDate().plusMonths(1);
         } else {
