@@ -16,13 +16,16 @@ class InsuranceServiceTest {
     
     @Mock
     private BhxhInvoiceRepository bhxhInvoiceRepository;
+
+    @Mock
+    private UserService userService;
     
     private InsuranceService insuranceService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        insuranceService = new InsuranceService(bhxhInvoiceRepository);
+        insuranceService = new InsuranceService(bhxhInvoiceRepository, userService);
     }
 
     @Test

@@ -34,7 +34,7 @@ public class RegistrationController {
         BhxhSubsEntity bhxhSubsEntity = bhxhSubsRepository.findByUserEntity(user);
         if (bhxhSubsEntity != null) {
             model.addAttribute("sub", bhxhSubsEntity);
-            PaymentEstimate paymentEstimate = insuranceService.calculate(user, bhxhSubsEntity);
+            PaymentEstimate paymentEstimate = insuranceService.calculate(user, bhxhSubsEntity.getPlan());
             model.addAttribute("total", paymentEstimate.getTotalAmount());
             model.addAttribute("completed", true);
             return "registration_detail";
@@ -48,8 +48,7 @@ public class RegistrationController {
     public String getCalculate(@RequestParam long baseSalary, @RequestParam int plan, Model model) {
         UserEntity user = new UserEntity();
         long deducted = insuranceService.calculateDeductedAmount(user);
-        BhxhSubsEntity fakeBhxhSubsEntity = new BhxhSubsEntity(user, plan, baseSalary, deducted);
-        PaymentEstimate paymentEstimate = insuranceService.calculate(user, fakeBhxhSubsEntity);
+        PaymentEstimate paymentEstimate = insuranceService.calculate(user, plan);
         model.addAttribute("deductedAmount", deducted);
         model.addAttribute("total", paymentEstimate.getTotalAmount());
         return "registration_calculate";
