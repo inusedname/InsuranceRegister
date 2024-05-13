@@ -29,7 +29,7 @@ public class AuthService {
         return user.get();
     }
 
-    public UserEntity registerUser(@NotNull RegisterPayload payload) throws ResponseStatusException {
+    public UserEntity createUser(@NotNull RegisterPayload payload) throws ResponseStatusException {
         if (userRepository.existsByBhxhId(payload.getBhxhId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username hoặc CMND/CCCD đã tồn tại");
         }

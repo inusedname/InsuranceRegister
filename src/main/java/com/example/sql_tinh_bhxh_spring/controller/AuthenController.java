@@ -29,7 +29,7 @@ public class AuthenController {
         if(userEntity != null) {
             session.setAttribute("userEntity", userEntity);
             System.out.println("Login Success !!");
-            return "index";
+            return "redirect:/home";
         } else {
             model.addAttribute("error", "Username hoặc password không chính xác");
             return "login";

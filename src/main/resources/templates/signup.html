@@ -212,45 +212,38 @@
     <div class="layout_padding2-top">
       <div class="row">
         <div class="container ">
-          <form action="#" th:action="@{/registration}" method="post">
+          <form th:action="@{/signup}" method="post">
             <div class="row">
-              <div class="col-3">
-                <label for="soCCCD">Số CCCD:</label>
-                <input type="text" id="soCCCD"  />
+              <div class="col-4">
+                <label for="bhxhId">Mã Số BHXH:</label>
+                <input type="text" id="bhxhId" name="bhxhId" />
               </div>
-              <div class="col-3">
-                <label for="hoTen">Họ và Tên:</label>
-                <input type="text" id="hoTen"  />
+              <div class="col-4">
+                <label for="fullname">Họ và Tên:</label>
+                <input type="text" id="fullname" name="fullname"/>
               </div>
-              <div class="col-3">
-                <label for="ngaySinh">Ngày Sinh:</label>
-                <input type="date" id="ngaySinh"  />
-              </div>
-              <div class="col-3">
-                <label for="gioiTinh">Giới Tính:</label>
-                <select id="gioiTinh">
-                  <option value="0"> Nam </option>
-                  <option value="1"> Nữ </option>
+              <div class="col-4">
+                <label for="bhxhAgencyId">Cơ quan BHXH</label>
+                <select id="bhxhAgencyId" th:name="bhxhAgencyId">
+                    <option th:each="bhxh: ${agencies}"
+                            th:text="${bhxh.displayName}"
+                            th:value="${bhxh.id}"></option>
                 </select>
               </div>
             </div>
             <div class="row">
-              <div class="col-3">
-                <label for="soDienThoai">Số Điện Thoại:</label>
-                <input type="tel" id="soDienThoai" />
-              </div>
-              <div class="col-3">
-                <label for="maSoBHXH">Mã Số BHXH:</label>
-                <input type="text" id="maSoBHXH"  />
-              </div>
-              <div class="col-3">
-                <label for="email">Email:</label>
-                <input type="email" id="email" />
-              </div>
-              <div class="col-3">
-                <label for="noiO">Nơi Ở:</label>
-                <input type="text" id="noiO"  />
-              </div>
+                <div class="col-4">
+                    <label for="userType">Loại Gia cảnh</label>
+                    <select id="userType" th:name="userType">
+                        <option value="0">Hộ nghèo</option>
+                        <option value="1">Hộ cận nghèo</option>
+                        <option value="2">Khác</option>
+                    </select>
+                </div>
+                <div class="col-8">
+                    <label for="password">Mật khẩu:</label>
+                    <input type="password" id="password" name="password"/>
+                </div>
             </div>
             <button type="submit">Đăng ký</button>
           </form>

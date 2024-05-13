@@ -152,84 +152,35 @@
         <div class="layout_padding2-top">
             <div class="row">
                 <div class="container ">
-                        <div class="row">
-                            <div class="col-3">
-                                <label for="soCCCD">Số CCCD:</label>
-                                <input type="text" id="soCCCD" th:value="${session.userEntity.citizen}" disabled/>
+                    <form th:action="@{/insurance_plan_calculate}" method="get">
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <label for="thuNhapThang">Thu nhập hàng tháng:</label>
+                                <input type="number" id="thuNhapThang" placeholder="1000000" name="thuNhapThang" th:value="${currentIncome}"/>
                             </div>
-                            <div class="col-3">
-                                <label for="hoTen">Họ và Tên:</label>
-                                <input type="text" id="hoTen" th:value="${session.userEntity.fullname}" disabled/>
-                            </div>
-                            <div class="col-3">
-                                <label for="ngaySinh">Ngày Sinh:</label>
-                                <input type="date" id="ngaySinh" th:value="${session.userEntity.birthday}" disabled/>
-                            </div>
-                            <div class="col-3">
-                                <label for="gioiTinh">Giới Tính:</label>
-                                <select id="gioiTinh" th:value="${session.userEntity.sex}" disabled>
-                                    <option value="0"> Nam </option>
-                                    <option value="1"> Nữ </option>
+                            <div class="col-4">
+                                <label for="soThang">Số tháng:</label>
+                                <select id="soThang" name="chuKy">
+                                    <option value="1"> 1 Tháng </option>
+                                    <option value="2"> 2 Tháng </option>
+                                    <option value="3"> 3 Tháng </option>
+                                    <option value="6"> 6 Tháng </option>
+                                    <option value="12"> 1 Năm </option>
+                                    <option value="24"> 2 Năm </option>
+                                    <option value="36"> 3 Năm </option>
+                                    <option value="-1">Đóng nốt phần còn lại (đủ 20 năm)</option>
                                 </select>
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-3">
-                                <label for="soDienThoai">Số Điện Thoại:</label>
-                                <input type="tel" id="soDienThoai" th:value="${session.userEntity.phoneNumber}" disabled />
+                            <div>
+                                <strong>Giải thích: Sau khi nhấn nút đăng ký chu kỳ bảo hiểm, bảo hiểm sẽ tự động gia hạn cho BHXH của bạn. Và trong n tháng đó bạn cần đóng bảo hiểm như hóa đơn được gửi.</strong>
                             </div>
-                            <div class="col-3">
-                                <label for="maSoBHXH">Mã Số BHXH:</label>
-                                <input type="text" id="maSoBHXH" th:value="${session.userEntity.username}" disabled />
-                            </div>
-                            <div class="col-3">
-                                <label for="email">Email:</label>
-                                <input type="email" id="email" th:value="${session.userEntity.email}" disabled />
-                            </div>
-                            <div class="col-3">
-                                <label for="noiO">Nơi Ở:</label>
-                                <input type="text" id="noiO" th:value="${session.userEntity.domestic}" disabled />
+                            <div>
+                                <strong>Nếu không kịp thời đóng bảo hiểm trước khi chu kỳ kết thúc, tiền nợ sẽ phải đóng vào chu kỳ tiếp theo và phải chịu thêm một khoản lãi phải trả cho cơ quan BHXH</strong>
                             </div>
                         </div>
-                        <div class="p-5"> --------------------------------------------------------------------- </div>
-                        <form action="#" th:action="@{/insurance}" method="post">
-                            <div class="row mt-3">
-                                <div class="col-3">
-                                    <label for="doiTuong"> Đối tượng </label>
-                                    <select id="doiTuong" class="doiTuong" name="doiTuong">
-                                        <option value="0"> Khác </option>
-                                        <option value="1"> Hộ cận nghèo </option>
-                                        <option value="2"> Hộ nghèo </option>
-                                    </select>
-                                </div>
-                                <div class="col-3">
-                                    <label for="thuNhapThang">Thu nhập hàng tháng:</label>
-                                    <input type="text" id="thuNhapThang" placeholder="Nhập thu nhập hàng tháng" name="thuNhapThang"/>
-                                </div>
-                                <div class="col-3">
-                                    <label for="mucTienDong">Mức tiền đóng:</label>
-                                    <input type="text" id="mucTienDong" disabled />
-                                </div>
-                                <div class="col-3">
-                                    <label for="soThang">Số tháng:</label>
-                                    <select id="soThang" name="soThang">
-                                        <option value="1"> 1 Tháng </option>
-                                        <option value="2"> 2 Tháng </option>
-                                        <option value="3"> 3 Tháng </option>
-                                        <option value="6"> 6 Tháng </option>
-                                        <option value="12"> 1 Năm </option>
-                                        <option value="24"> 2 Năm </option>
-                                        <option value="36"> 3 Năm </option>
-                                    </select>
-                                </div>
-                            </div>
-                        <div class="row mt-3">
-                            <div class="col-3">
-                                <label for="tinhTienDong" class="text-danger"> Số tiền cần đóng: </label>
-                                <input type="text" id="tinhTienDong" name="tinhTienDong" disabled  />
-                            </div>
-                        </div>
-                        <button type="submit"> Đăng ký </button>
+                        <button class="row mt-3" type="submit">Dự tính khoản phải đóng</button>
                     </form>
                 </div>
             </div>
@@ -240,53 +191,53 @@
 <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.js"></script>
 
-<script>
-    function openNav() {
-        document.getElementById("myNav").classList.toggle("menu_width");
-        document
-            .querySelector(".custom_menu-btn")
-            .classList.toggle("menu_btn-style");
-    }
+<!--<script>-->
+<!--    function openNav() {-->
+<!--        document.getElementById("myNav").classList.toggle("menu_width");-->
+<!--        document-->
+<!--            .querySelector(".custom_menu-btn")-->
+<!--            .classList.toggle("menu_btn-style");-->
+<!--    }-->
 
-    function getValueThuNhapThang() {
-        return parseFloat(document.getElementById('thuNhapThang').value);
-    }
+<!--    function getValueThuNhapThang() {-->
+<!--        return parseFloat(document.getElementById('thuNhapThang').value);-->
+<!--    }-->
 
-    function getValueSoThang() {
-        return parseInt(document.getElementById('soThang').value);
-    }
+<!--    function getValueSoThang() {-->
+<!--        return parseInt(document.getElementById('soThang').value);-->
+<!--    }-->
 
-    function getValueDoiTuong() {
-        return parseInt(document.getElementById('doiTuong').value);
-    }
+<!--    function getValueDoiTuong() {-->
+<!--        return parseInt(document.getElementById('doiTuong').value);-->
+<!--    }-->
 
-    function changeValueMucTienDong(mucTienDong) {
-        document.getElementById('mucTienDong').value = mucTienDong;
-    }
+<!--    function changeValueMucTienDong(mucTienDong) {-->
+<!--        document.getElementById('mucTienDong').value = mucTienDong;-->
+<!--    }-->
 
-    function calculateMucTienDong() {
-        const tinhTienDong = getValueThuNhapThang() * 0.22 * getValueSoThang();
-        const valDoiTuong = getValueDoiTuong();
-        const BHXHhotro = (valDoiTuong == 0 ? 33000 : (valDoiTuong == 1 ? 82500 : 99000)) * getValueSoThang();
-        const mucTienDong = tinhTienDong - BHXHhotro;
-        if(mucTienDong > 0) {
-            document.getElementById('tinhTienDong').value = mucTienDong;
-        }
-    }
+<!--    function calculateMucTienDong() {-->
+<!--        const tinhTienDong = getValueThuNhapThang() * 0.22 * getValueSoThang();-->
+<!--        const valDoiTuong = getValueDoiTuong();-->
+<!--        const BHXHhotro = (valDoiTuong == 0 ? 33000 : (valDoiTuong == 1 ? 82500 : 99000)) * getValueSoThang();-->
+<!--        const mucTienDong = tinhTienDong - BHXHhotro;-->
+<!--        if(mucTienDong > 0) {-->
+<!--            document.getElementById('tinhTienDong').value = mucTienDong;-->
+<!--        }-->
+<!--    }-->
 
-    document.getElementById('thuNhapThang').addEventListener('input', function() {
-        changeValueMucTienDong(getValueThuNhapThang() * 0.22);
-        calculateMucTienDong();
-    });
+<!--    document.getElementById('thuNhapThang').addEventListener('input', function() {-->
+<!--        changeValueMucTienDong(getValueThuNhapThang() * 0.22);-->
+<!--        calculateMucTienDong();-->
+<!--    });-->
 
-    document.getElementById('soThang').addEventListener('change', function() {
-        calculateMucTienDong();
-    });
+<!--    document.getElementById('soThang').addEventListener('change', function() {-->
+<!--        calculateMucTienDong();-->
+<!--    });-->
 
-    document.getElementById('doiTuong').addEventListener('change', function() {
-        calculateMucTienDong();
-    });
-</script>
+<!--    document.getElementById('doiTuong').addEventListener('change', function() {-->
+<!--        calculateMucTienDong();-->
+<!--    });-->
+<!--</script>-->
 </body>
 
 </html>

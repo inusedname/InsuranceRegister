@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -70,7 +69,7 @@ public class AuthServiceTest {
         when(bhxhAgencyRepository.findById(any())).thenReturn(Optional.of(new BhxhAgencyEntity()));
 
         // Act
-        UserEntity result = authService.registerUser(payload);
+        UserEntity result = authService.createUser(payload);
 
         // Assert
         assertEquals(payload.getBhxhId(), result.getBhxhId());
@@ -86,6 +85,6 @@ public class AuthServiceTest {
         when(userRepository.existsByBhxhId(payload.getBhxhId())).thenReturn(true);
 
         // Act & Assert
-        assertThrows(ResponseStatusException.class, () -> authService.registerUser(payload));
+        assertThrows(ResponseStatusException.class, () -> authService.createUser(payload));
     }
 }
