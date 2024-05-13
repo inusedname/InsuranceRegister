@@ -30,16 +30,16 @@ class InsuranceServiceTest {
         UserEntity user = new UserEntity();
         Map<Integer, String> options = insuranceService.getMonthOptions(user);
         assertEquals(4, options.size());
-        assertEquals("1 tháng", options.get(1));
-        assertEquals("3 tháng", options.get(3));
-        assertEquals("6 tháng", options.get(6));
+        assertEquals("1 thÃ¡ng", options.get(1));
+        assertEquals("1 thÃ¡ng", options.get(3));
+        assertEquals("6 thï¿½ng", options.get(6));
         assertEquals("1 n?m", options.get(12));
     }
 
     @Test
     void testCalculate() {
         UserEntity user = new UserEntity();
-        user.setBaseSalary(1000);
+        user.setBaseSalary(1000L);
         int monthsPaying = 12;
         PaymentEstimate estimate = insuranceService.calculate(user, monthsPaying);
         assertEquals(220, estimate.getBasePayment());

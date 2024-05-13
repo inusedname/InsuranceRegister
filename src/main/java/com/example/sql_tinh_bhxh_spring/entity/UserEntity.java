@@ -45,10 +45,6 @@ public class UserEntity {
         this.type = type;
     }
 
-    public void setBaseSalary(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     public enum Type {
         HO_NGHEO,
         HO_CAN_NGHEO,
