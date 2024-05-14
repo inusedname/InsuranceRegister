@@ -1,0 +1,15 @@
+{
+  "name": "qldapm",
+  "version": "1.0.0",
+  "description": "```mysql\r INSERT INTO bhxh.bhxh_agency_entity (id, address, display_name) VALUES (1, 'Ha Dong, Ha Noi', 'BHXH Quận Hà Đông');\r INSERT INTO bhxh.user_entity (id, base_salary, bhxh_id, fullname, password, role, type, bhxh_agency_id) VALUES (1, 1000000, '1', 'Nguyen Viet Quang', '1', 1, 2, 1);\r INSERT INTO bhxh.user_entity (id, base_salary, bhxh_id, fullname, password, role, type, bhxh_agency_id) VALUES (2, null, 'admin', null, 'admin', 0, null, null);\r INSERT INTO bhxh.bhxh_invoice_entity (id, base_salary, deducted_amount, end_date, interest_amount, start_date, status, total_amount, user_id) VALUES (1, 1000000, 33000, '2024-05-09', 100000, '2024-02-15', 0, 1, 1);",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node test/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "selenium-webdriver": "^4.20.0"
+  }
+}
