@@ -24,8 +24,6 @@ public class UserEntity {
 
     public String password;
 
-    private Long baseSalary;
-
     @ManyToOne @JoinColumn(name = "bhxh_agency_id")
     private BhxhAgencyEntity bhxhAgencyEntity;
 

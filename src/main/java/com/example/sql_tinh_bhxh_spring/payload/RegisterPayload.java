@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 public class RegisterPayload {
     String bhxhId;
-    String fullName;
+    String fullname;
     String password;
     Long bhxhAgencyId;
     int userType; // 0 -> HO_NGHEO, 1 -> HO_CAN_NGHEO, 2 -> KHAC
@@ -24,14 +24,6 @@ public class RegisterPayload {
 
     public void setBhxhId(String bhxhId) {
         this.bhxhId = bhxhId;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public String getPassword() {

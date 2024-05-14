@@ -34,14 +34,14 @@ public class InsuranceService {
         return options;
     }
 
-    public PaymentEstimate calculate(UserEntity user, int monthsPaying) {
+    public PaymentEstimate calculate(UserEntity user, long baseSalary, int monthsPaying) {
         long deducted = calculateDeductedAmount(user);
         BhxhInvoiceEntity lastInvoice = getLatestInvoice(user.id).orElse(null);
         long debtInterest = lastInvoice != null ? calculateDebtInterestAmount(lastInvoice) : 0L;
         return new PaymentEstimate(
                 deducted,
                 debtInterest,
-                user.getBaseSalary(),
+                baseSalary,
                 getStartDate(user),
                 getStartDate(user).plusMonths(monthsPaying)
         );

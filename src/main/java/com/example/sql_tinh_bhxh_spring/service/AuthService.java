@@ -48,7 +48,7 @@ public class AuthService {
         };
         return new UserEntity(
                 payload.getBhxhId(),
-                payload.getFullName(),
+                payload.getFullname(),
                 payload.getPassword(),
                 type,
                 bhxhAgencyEntity,

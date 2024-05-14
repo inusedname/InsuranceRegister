@@ -23,20 +23,4 @@ public class UserServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
-    @Test
-    void testUpdateSalary() {
-        // Arrange
-        long newSalary = 1000L; // Giá lương mới
-        UserEntity userEntity = new UserEntity(); // Tạo đối tượng UserEntity
-        userEntity.setId(1L); // Thiết lập ID cho UserEntity (ví dụ)
-        userEntity.setBaseSalary(500L); // Thiết lập mức lương cũ cho UserEntity (ví dụ)
-
-        // Act
-        userService.updateSalary(newSalary, userEntity);
-
-        // Assert
-        assertEquals(newSalary, userEntity.getBaseSalary()); // Kiểm tra xem mức lương đã được cập nhật chưa
-        verify(userRepository, times(1)).save(userEntity); // Kiểm tra xem phương thức save đã được gọi chính xác một lần hay không
-    }
 }

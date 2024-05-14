@@ -12,11 +12,6 @@ import java.util.Optional;
 public class UserService {
     private UserRepository userRepository;
 
-    public void updateSalary(long newSalary, UserEntity userEntity) {
-        userEntity.setBaseSalary(newSalary);
-        userRepository.save(userEntity);
-    }
-
     public Optional<UserEntity> findById(long id) {
         return userRepository.findById(id);
     }

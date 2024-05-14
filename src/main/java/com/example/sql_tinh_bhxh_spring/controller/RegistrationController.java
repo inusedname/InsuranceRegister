@@ -5,6 +5,7 @@ import com.example.sql_tinh_bhxh_spring.entity.UserEntity;
 import com.example.sql_tinh_bhxh_spring.model.PaymentEstimate;
 import com.example.sql_tinh_bhxh_spring.repository.BhxhSubsRepository;
 import com.example.sql_tinh_bhxh_spring.service.InsuranceService;
+import com.example.sql_tinh_bhxh_spring.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import java.util.logging.Logger;
 public class RegistrationController {
     private BhxhSubsRepository bhxhSubsRepository;
     private InsuranceService insuranceService;
+    private UserService userService;
     private final Logger logger = Logger.getLogger(RegistrationController.class.getName());
 
     @GetMapping("")
@@ -34,7 +36,7 @@ public class RegistrationController {
         BhxhSubsEntity bhxhSubsEntity = bhxhSubsRepository.findByUserEntity(user);
         if (bhxhSubsEntity != null) {
             model.addAttribute("sub", bhxhSubsEntity);
-            PaymentEstimate paymentEstimate = insuranceService.calculate(user, bhxhSubsEntity.getPlan());
+            PaymentEstimate paymentEstimate = insuranceService.calculate(user, bhxhSubsEntity.getBaseSalary(), bhxhSubsEntity.getPlan());
             model.addAttribute("total", paymentEstimate.getTotalAmount());
             model.addAttribute("completed", true);
             return "registration_detail";
@@ -45,10 +47,10 @@ public class RegistrationController {
     }
 
     @GetMapping("calculate")
-    public String getCalculate(@RequestParam long baseSalary, @RequestParam int plan, Model model) {
-        UserEntity user = new UserEntity();
+    public String getCalculate(@RequestParam long baseSalary, @RequestParam int plan, Model model, HttpSession session) {
+        UserEntity user = userService.findById(((UserEntity) session.getAttribute("userEntity")).getId()).orElseThrow();
         long deducted = insuranceService.calculateDeductedAmount(user);
-        PaymentEstimate paymentEstimate = insuranceService.calculate(user, plan);
+        PaymentEstimate paymentEstimate = insuranceService.calculate(user, baseSalary, plan);
         model.addAttribute("deductedAmount", deducted);
         model.addAttribute("total", paymentEstimate.getTotalAmount());
         return "registration_calculate";
