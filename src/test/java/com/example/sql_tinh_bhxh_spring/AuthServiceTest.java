@@ -8,18 +8,20 @@ import com.example.sql_tinh_bhxh_spring.repository.UserRepository;
 import com.example.sql_tinh_bhxh_spring.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
     @Mock
     private UserRepository userRepository;
@@ -30,61 +32,89 @@ public class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
 
+    private RegisterPayload validPayload;
+    private BhxhAgencyEntity validAgency;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        validPayload = new RegisterPayload("2", "Nguyen Viet Quang", "1", 1L, 0);
+        validAgency = new BhxhAgencyEntity();
     }
 
     @Test
-    void testLogin_ValidCredentials_ReturnsUserEntity() {
+    void testLogin_UserFound() { //kiem tra khi nguoi dung duoc tim thay
         // Arrange
-        String bhxhId = "testId";
-        String password = "testPassword";
-        UserEntity userEntity = new UserEntity(bhxhId, "Test User", password, UserEntity.Type.HO_NGHEO, new BhxhAgencyEntity(), UserEntity.Role.USER);
-        when(userRepository.findByBhxhIdAndPassword(bhxhId, password)).thenReturn(Optional.of(userEntity));
+        UserEntity user = new UserEntity();
+        when(userRepository.findByBhxhIdAndPassword("1", "password")).thenReturn(Optional.of(user));
 
         // Act
-        UserEntity result = authService.login(bhxhId, password);
+        UserEntity result = authService.login("1", "password");
 
         // Assert
-        assertEquals(userEntity, result);
+        assertEquals(user, result);
     }
 
     @Test
-    void testLogin_InvalidCredentials_ThrowsResponseStatusException() {
+    void testLogin_UserNotFound() { // Kiem tra khi nguoi dung khong duoc tim thay
         // Arrange
-        String bhxhId = "1";
-        String password = "1";
-        when(userRepository.findByBhxhIdAndPassword(bhxhId, password)).thenReturn(Optional.empty());
+        when(userRepository.findByBhxhIdAndPassword("1", "wrongpassword")).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(ResponseStatusException.class, () -> authService.login(bhxhId, password));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            authService.login("1", "wrongpassword");
+        });
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 
     @Test
-    void testRegisterUser_ValidPayload_ReturnsUserEntity() {
+    void testCreateUser_ValidPayload_ReturnsUserEntity() { //Kiểm tra khi đăng ký người dùng với payload hợp lệ.
         // Arrange
-        RegisterPayload payload = new RegisterPayload("5", "acv dfsdfs", "1", 1L, 0);
-        when(userRepository.existsByBhxhId(payload.getBhxhId())).thenReturn(false);
-        when(bhxhAgencyRepository.findById(any())).thenReturn(Optional.of(new BhxhAgencyEntity()));
+        when(userRepository.existsByBhxhId(validPayload.getBhxhId())).thenReturn(false);
+        when(bhxhAgencyRepository.findById(validPayload.getBhxhAgencyId())).thenReturn(Optional.of(validAgency));
+
+        UserEntity expectedUserEntity = new UserEntity(
+                validPayload.getBhxhId(),
+                validPayload.getFullname(),
+                validPayload.getPassword(),
+                UserEntity.Type.HO_NGHEO,
+                validAgency,
+                UserEntity.Role.USER
+        );
+
+        when(userRepository.save(any(UserEntity.class))).thenReturn(expectedUserEntity);
 
         // Act
-        UserEntity result = authService.createUser(payload);
+        UserEntity result = authService.createUser(validPayload);
 
         // Assert
-        assertEquals(payload.getBhxhId(), result.getBhxhId());
-        assertEquals(payload.getFullname(), result.getFullname());
-        assertEquals(payload.getPassword(), result.getPassword());
-        // Add more assertions as needed
+        assertNotNull(result, "The created user entity should not be null.");
+        assertEquals(validPayload.getBhxhId(), result.getBhxhId());
+        assertEquals(validPayload.getFullname(), result.getFullname());
+        assertEquals(validPayload.getPassword(), result.getPassword());
     }
 
     @Test
-    void testRegisterUser_DuplicateBhxhId_ThrowsResponseStatusException() {
+    void testCreateUser_UsernameExists() { //Kiểm tra khi đăng ký người dùng nhưng username đã tồn tại.
         // Arrange
-        RegisterPayload payload = new RegisterPayload("duplicateId", "Test User", "testPassword", 1L, 0);
-        when(userRepository.existsByBhxhId(payload.getBhxhId())).thenReturn(true);
+        when(userRepository.existsByBhxhId(validPayload.getBhxhId())).thenReturn(true);
 
         // Act & Assert
-        assertThrows(ResponseStatusException.class, () -> authService.createUser(payload));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            authService.createUser(validPayload);
+        });
+        assertEquals(HttpStatus.CONFLICT, exception.getStatusCode());
+    }
+
+    @Test
+    void testCreateUser_AgencyNotFound() { //Kiểm tra khi đăng ký người dùng nhưng không tìm thấy cơ quan BHXH.
+        // Arrange
+        when(userRepository.existsByBhxhId(validPayload.getBhxhId())).thenReturn(false);
+        when(bhxhAgencyRepository.findById(validPayload.getBhxhAgencyId())).thenReturn(Optional.empty());
+
+        // Act & Assert
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+            authService.createUser(validPayload);
+        });
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
     }
 }
