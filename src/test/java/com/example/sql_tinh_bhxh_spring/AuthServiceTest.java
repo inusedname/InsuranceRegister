@@ -73,7 +73,7 @@ public class AuthServiceTest {
 
         // Assert
         assertEquals(payload.getBhxhId(), result.getBhxhId());
-        assertEquals(payload.getFullName(), result.getFullname());
+        assertEquals(payload.getFullname(), result.getFullname());
         assertEquals(payload.getPassword(), result.getPassword());
         // Add more assertions as needed
     }

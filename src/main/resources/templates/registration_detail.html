@@ -36,31 +36,42 @@
     <h2 class="text-center">Thông tin gói bảo hiểm</h2>
     <div class="row mt-3">
         <div class="col-md-4">
-            <div>Mức lương đã áp dụng: <span th:text="${sub.getBaseSalary()}"></span>(1)</div>
+            <div>Mức lương đã áp dụng: <span th:text="${sub.getBaseSalary()}  + ' VNĐ'"></span><strong> (1)</strong></div>
         </div>
         <div class="col-md-4">
-            <div>Chu kỳ đăng ký: <span th:text="${sub.getPlan()} + 'tháng'">(2)</span></div>
+            <div>Chu kỳ đăng ký: <span th:text="${sub.getPlan()} + ' tháng'"></span><strong> (2)</strong></div>
         </div>
         <div class="col-md-4">
-            <div>Mức hỗ trợ: <span th:text="${sub.getDeductedAmount()}">(3)</span></div>
+            <div>Mức hỗ trợ: <span th:text="${sub.getDeductedAmount()}  + ' VNĐ'"></span> <strong> (3)</strong></div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div>Công thức tính: 22% * (1) * (2) - (3)</div>
+        </div>
+        <div class="col-md-4">
+            <div>Số tiền phải đóng mỗi chu kỳ: <span th:text="${total} + ' VNĐ'"></span></div>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col-md-4">
-            <div>Công thức tính: 22% * (1) * (2) - (3)(</div>
+            <div>Lần đóng cuối cùng: Chu kỳ <span th:text="${lastPeriodPay}"></span></div>
         </div>
         <div class="col-md-4">
-            <div>Số tiền phải đóng mỗi chu kỳ: <span th:text="${total}"></span></div>
+            <div>Số kỳ còn nợ: <span th:text="${periodsInDebt} + ' kỳ'"></span></div>
         </div>
         <div class="col-md-4">
-            <div>Số tiền đang nợ: <span th:text="TODO"></span></div>
+            <div>Lần đóng tiếp theo: Chu kỳ <span th:text="${nextPeriodDay}"></span></div>
         </div>
     </div>
-    <h2>Trạng thái: <span th:text="${completed == true} ? 'ĐÃ ĐÓNG' : 'CHƯA ĐÓNG'"
-                          th:class="${completed == true} ? 'text-success' : 'text-danger'"></span></h2>
+    <h2>Trạng thái: <span th:text="${periodsInDebt == 0} ? 'ĐÃ ĐÓNG' : 'CÒN NỢ'"
+                          th:class="${periodsInDebt == 0} ? 'text-success' : 'text-danger'"></span></h2>
     <div class="row text-center mt-3">
-        <button class="btn btn-primary">Đóng tiền</button>
-        <button class="btn btn-primary ml-3">Huỷ hợp đồng</button>
+        <a th:class="'btn btn-primary' + ' ' + ${periodsInDebt == 0 ? 'disabled' : ''}"
+           th:href="${periodsInDebt == 0 ? '' : '/insurance/pay'}">Đóng tiền</a>
+<!--        TODO-->
+        <button class="btn btn-danger ml-3">Huỷ hợp đồng</button>
     </div>
 </div>
 <section class="container-fluid footer_section ">

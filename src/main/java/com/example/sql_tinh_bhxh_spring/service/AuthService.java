@@ -6,8 +6,8 @@ import com.example.sql_tinh_bhxh_spring.payload.RegisterPayload;
 import com.example.sql_tinh_bhxh_spring.repository.BhxhAgencyRepository;
 import com.example.sql_tinh_bhxh_spring.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -29,7 +29,7 @@ public class AuthService {
         return user.get();
     }
 
-    public UserEntity createUser(@NotNull RegisterPayload payload) throws ResponseStatusException {
+    public UserEntity createUser(@NonNull RegisterPayload payload) throws ResponseStatusException {
         if (userRepository.existsByBhxhId(payload.getBhxhId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username hoặc CMND/CCCD đã tồn tại");
         }
@@ -39,7 +39,7 @@ public class AuthService {
         return userRepository.save(newUserEntity);
     }
 
-    private static @NotNull UserEntity createUserEntity(@NotNull RegisterPayload payload, BhxhAgencyEntity bhxhAgencyEntity) {
+    private static @NonNull UserEntity createUserEntity(@NonNull RegisterPayload payload, BhxhAgencyEntity bhxhAgencyEntity) {
         UserEntity.Type type = switch (payload.getUserType()) {
             case 0 -> UserEntity.Type.HO_NGHEO;
             case 1 -> UserEntity.Type.HO_CAN_NGHEO;

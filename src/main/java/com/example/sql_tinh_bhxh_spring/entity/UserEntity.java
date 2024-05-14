@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Setter
@@ -31,8 +33,16 @@ public class UserEntity {
 
     private Type type;
 
+    private int totalMonthParticipated;
+
     @OneToMany(mappedBy = "userEntity")
     private List<BhxhInvoiceEntity> bhxhInvoiceEntities;
+
+    @OneToOne(mappedBy = "userEntity")
+    @Nullable
+    private BhxhSubsEntity bhxhSubsEntity;
+
+    private LocalDate createdAt;
 
     public UserEntity(String bhxhId, String fullname, String password, Type type, BhxhAgencyEntity bhxhAgencyEntity, Role role) {
         this.bhxhId = bhxhId;
@@ -41,12 +51,22 @@ public class UserEntity {
         this.bhxhAgencyEntity = bhxhAgencyEntity;
         this.role = role;
         this.type = type;
+        this.totalMonthParticipated = 0;
+        this.createdAt = LocalDate.now();
     }
 
     public enum Type {
         HO_NGHEO,
         HO_CAN_NGHEO,
-        KHAC
+        KHAC;
+
+        public String getDisplayName() {
+            return switch (this) {
+                case HO_NGHEO -> "Hộ nghèo";
+                case HO_CAN_NGHEO -> "Hộ cận nghèo";
+                case KHAC -> "Khác";
+            };
+        }
     }
 
     public enum Role {

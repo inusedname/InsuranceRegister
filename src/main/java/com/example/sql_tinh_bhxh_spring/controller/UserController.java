@@ -25,7 +25,7 @@ public class UserController {
     @GetMapping("/signout")
     public String signOut(HttpSession session) {
         session.invalidate();
-        return "redirect:/index";
+        return "redirect:/home";
     }
 
 //    @PutMapping("/update")

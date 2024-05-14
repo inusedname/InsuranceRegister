@@ -5,6 +5,7 @@ import com.example.sql_tinh_bhxh_spring.entity.BhxhSubsEntity;
 import com.example.sql_tinh_bhxh_spring.entity.UserEntity;
 import com.example.sql_tinh_bhxh_spring.model.PaymentEstimate;
 import com.example.sql_tinh_bhxh_spring.repository.BhxhInvoiceRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,21 @@ public class InsuranceService {
         );
     }
 
+    public int getPeriodInDebt(UserEntity user) {
+        BhxhSubsEntity bhxhSubsEntity = user.getBhxhSubsEntity();
+        if (bhxhSubsEntity == null) return 0;
+        BhxhInvoiceEntity lastInvoice = getLatestInvoice(user.id).orElse(null);
+        if (lastInvoice == null) {
+            // create a fake last invoice so that
+            lastInvoice = new BhxhInvoiceEntity();
+            lastInvoice.setEndDate(user.getCreatedAt().minusMonths(1));
+        }
+        int extraMonths = monthsBetween(lastInvoice.getEndDate(), LocalDate.now());
+        System.out.println("extraMonths = " + extraMonths);
+        if (extraMonths <= 0) return 0;
+        return extraMonths / bhxhSubsEntity.getPlan() + extraMonths < bhxhSubsEntity.getPlan() ? 1 : 0;
+    }
+
     public long calculateDeductedAmount(UserEntity user) {
         return switch (user.getType()) {
             case HO_NGHEO -> 99000L;
@@ -61,14 +77,19 @@ public class InsuranceService {
         return 0L;
     }
 
-    public void setInvoicePaid(BhxhInvoiceEntity invoice) {
+    private void setInvoicePaid(BhxhInvoiceEntity invoice) {
         invoice.setStatus(BhxhInvoiceEntity.Status.PAID);
         bhxhInvoiceRepository.save(invoice);
     }
 
+    @Transactional
     public void createBhxhInvoice(PaymentEstimate estimate, UserEntity userEntity) {
         BhxhInvoiceEntity bhxhInvoiceEntity = new BhxhInvoiceEntity(userEntity, estimate);
         bhxhInvoiceRepository.save(bhxhInvoiceEntity);
+        int extraMonths = monthsBetween(estimate.getStartDate(), estimate.getEndDate());
+        userEntity.setTotalMonthParticipated(userEntity.getTotalMonthParticipated() + extraMonths);
+        userService.save(userEntity);
+        setInvoicePaid(bhxhInvoiceEntity);
     }
 
     public Optional<BhxhInvoiceEntity> getLatestInvoice(long userId) {
@@ -78,17 +99,13 @@ public class InsuranceService {
     }
 
     private int getAttendedMonths(UserEntity userEntity) {
-        return userEntity.getBhxhInvoiceEntities().stream()
-                .filter(invoice -> invoice.getStatus() == BhxhInvoiceEntity.Status.PAID)
-                .reduce(0, (acc, invoice) -> acc +
-                        monthsBetween(invoice.getStartDate(), invoice.getEndDate())
-                        , Integer::sum);
+        return userEntity.getTotalMonthParticipated();
     }
 
     private LocalDate getStartDate(UserEntity userEntity) {
         Optional<BhxhInvoiceEntity> invoice = this.getLatestInvoice(userEntity.id);
         if (invoice.isPresent()) {
-            return invoice.get().getStartDate().plusMonths(1);
+            return invoice.get().getEndDate().plusMonths(1);
         } else {
             return LocalDate.now();
         }

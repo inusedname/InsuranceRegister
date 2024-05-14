@@ -15,4 +15,8 @@ public class UserService {
     public Optional<UserEntity> findById(long id) {
         return userRepository.findById(id);
     }
+
+    public UserEntity save(UserEntity user) {
+        return userRepository.save(user);
+    }
 }

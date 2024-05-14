@@ -1,5 +1,6 @@
 package com.example.sql_tinh_bhxh_spring.controller;
 
+import com.example.sql_tinh_bhxh_spring.entity.BhxhInvoiceEntity;
 import com.example.sql_tinh_bhxh_spring.entity.BhxhSubsEntity;
 import com.example.sql_tinh_bhxh_spring.entity.UserEntity;
 import com.example.sql_tinh_bhxh_spring.model.PaymentEstimate;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
 @Controller
@@ -28,22 +30,47 @@ public class RegistrationController {
 
     @GetMapping("")
     public String registration(HttpSession session, Model model) {
-        UserEntity user = (UserEntity) session.getAttribute("userEntity");
-        if (user == null) {
-            logger.warning("User not logged in");
-            return "redirect:/login";
-        }
+        UserEntity user = userService.findById(((UserEntity) session.getAttribute("userEntity")).getId()).orElseThrow();
         BhxhSubsEntity bhxhSubsEntity = bhxhSubsRepository.findByUserEntity(user);
         if (bhxhSubsEntity != null) {
+            // if user already has registration, return registration_detail
             model.addAttribute("sub", bhxhSubsEntity);
             PaymentEstimate paymentEstimate = insuranceService.calculate(user, bhxhSubsEntity.getBaseSalary(), bhxhSubsEntity.getPlan());
             model.addAttribute("total", paymentEstimate.getTotalAmount());
-            model.addAttribute("completed", true);
+            BhxhInvoiceEntity bhxhInvoiceEntity = insuranceService.getLatestInvoice(user.getId()).orElse(null);
+            if (bhxhInvoiceEntity != null) {
+                String lastPeriodPay =
+                        bhxhInvoiceEntity.getStartDate().format(
+                                DateTimeFormatter.ofPattern("MM/yyyy")
+                        ) + " - " +
+                                bhxhInvoiceEntity.getEndDate().format(
+                                        DateTimeFormatter.ofPattern("MM/yyyy")
+                                );
+                model.addAttribute("lastPeriodPay", lastPeriodPay);
+            } else {
+                model.addAttribute("lastPeriodPay", "Không có dữ liệu");
+            }
+            PaymentEstimate estimate = insuranceService.calculate(user, bhxhSubsEntity.getBaseSalary(), bhxhSubsEntity.getPlan());
+            String nextPeriodDay =
+                    estimate.getStartDate().format(
+                            DateTimeFormatter.ofPattern("MM/yyyy")
+                    ) + " - " +
+                    estimate.getEndDate().format(
+                            DateTimeFormatter.ofPattern("MM/yyyy")
+                    );
+            model.addAttribute("nextPeriodDay", nextPeriodDay);
+            model.addAttribute("periodsInDebt", insuranceService.getPeriodInDebt(user));
             return "registration_detail";
+        } else {
+            // User infos
+            String agencyName = user.getBhxhAgencyEntity().getDisplayName();
+            String userType = user.getType().getDisplayName();
+            int totalMonthParticipated = user.getTotalMonthParticipated();
+            model.addAttribute("agencyName", agencyName);
+            model.addAttribute("userType", userType);
+            model.addAttribute("totalMonthParticipated", totalMonthParticipated);
+            return "registration_new";
         }
-        return "registration_new";
-
-        // if user already has registration, return registration_detail
     }
 
     @GetMapping("calculate")
