@@ -44,7 +44,7 @@ public class InsuranceService {
                 debtInterest,
                 baseSalary,
                 getStartDate(user),
-                getStartDate(user).plusMonths(monthsPaying)
+                getStartDate(user).plusMonths(monthsPaying - 1)
         );
     }
 
@@ -60,7 +60,7 @@ public class InsuranceService {
         int extraMonths = monthsBetween(lastInvoice.getEndDate(), LocalDate.now());
         System.out.println("extraMonths = " + extraMonths);
         if (extraMonths <= 0) return 0;
-        return extraMonths / bhxhSubsEntity.getPlan() + extraMonths < bhxhSubsEntity.getPlan() ? 1 : 0;
+        return (extraMonths / bhxhSubsEntity.getPlan()) + (extraMonths < bhxhSubsEntity.getPlan() ? 1 : 0);
     }
 
     public long calculateDeductedAmount(UserEntity user) {
