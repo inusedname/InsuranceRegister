@@ -1,4 +1,4 @@
-package com.example.sql_tinh_bhxh_spring;
+package com.example.sql_tinh_bhxh_spring.service;
 
 import com.example.sql_tinh_bhxh_spring.entity.BhxhAgencyEntity;
 import com.example.sql_tinh_bhxh_spring.entity.BhxhInvoiceEntity;
@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.ArgumentCaptor;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,9 +23,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-class InsuranceServiceTest {
+class InsuranceServiceTest2 {
 
     @Mock
     private BhxhInvoiceRepository bhxhInvoiceRepository;
@@ -36,6 +38,8 @@ class InsuranceServiceTest {
 
     private UserEntity user;
     private BhxhInvoiceEntity invoice;
+    private BhxhSubsEntity bhxhSubsEntity;
+    private PaymentEstimate estimate;
 
     @BeforeEach
     void setUp() {
@@ -44,14 +48,24 @@ class InsuranceServiceTest {
         user.setId(1L);
         user.setType(UserEntity.Type.HO_NGHEO);
         user.setCreatedAt(LocalDate.now().minusYears(1));
-        user.setTotalMonthParticipated(10);
+        user.setTotalMonthParticipated(12);
 
         invoice = new BhxhInvoiceEntity();
         invoice.setStartDate(LocalDate.now().minusMonths(5));
         invoice.setEndDate(LocalDate.now().minusMonths(1));
         invoice.setUserEntity(user);
 
+        bhxhSubsEntity = new BhxhSubsEntity();
+
         user.setBhxhInvoiceEntities(List.of(invoice));
+
+        estimate = new PaymentEstimate(
+                99000L,
+                0L,
+                5000000L,
+                LocalDate.now(),
+                LocalDate.now().plusMonths(6)
+        );
     }
 
     @Test
@@ -65,6 +79,24 @@ class InsuranceServiceTest {
         assertEquals("3 tháng", monthOptions.get(3));
         assertEquals("6 tháng", monthOptions.get(6));
         assertEquals("1 năm", monthOptions.get(12));
+    }
+
+    @Test
+    void testGetMonthOptionsMoreThan10Years() {
+        // Arrange
+        user.setTotalMonthParticipated(120); // Exactly 10 years
+
+        // Act
+        Map<Integer, String> monthOptions = insuranceService.getMonthOptions(user);
+
+        // Assert
+        assertEquals(6, monthOptions.size());
+        assertEquals("1 tháng", monthOptions.get(1));
+        assertEquals("3 tháng", monthOptions.get(3));
+        assertEquals("6 tháng", monthOptions.get(6));
+        assertEquals("1 năm", monthOptions.get(12));
+        assertEquals("2 năm", monthOptions.get(24));
+        assertEquals("3 năm", monthOptions.get(36));
     }
 
     @Test
@@ -113,4 +145,59 @@ class InsuranceServiceTest {
         // Assert
         assertEquals(0, periodInDebt); // Adjust based on the logic
     }
+
+    @Test
+    void testGetPeriodInDebtBhxhSubsEntityNull() {
+        // Arrange
+        user.setBhxhSubsEntity(null);
+
+        // Act
+        int periodInDebt = insuranceService.getPeriodInDebt(user);
+
+        // Assert
+        assertEquals(0, periodInDebt);
+    }
+
+
+
+//    @Test
+//    void testGetPeriodInDebtLastInvoiceNull() {
+//        // Arrange
+//        when(insuranceService.getLatestInvoice(user.getId())).thenReturn(Optional.empty());
+//
+//        // Act
+//        int periodInDebt = insuranceService.getPeriodInDebt(user);
+//
+//        // Assert
+//        assertEquals(0, periodInDebt);
+//    }
+
+    @Test
+    void testCreateBhxhInvoice() {
+        // Act
+        insuranceService.createBhxhInvoice(estimate, user);
+
+        // Assert
+        ArgumentCaptor<BhxhInvoiceEntity> invoiceCaptor = ArgumentCaptor.forClass(BhxhInvoiceEntity.class);
+        verify(bhxhInvoiceRepository, times(2)).save(invoiceCaptor.capture()); //save duoc goi 2 lan
+        BhxhInvoiceEntity savedInvoice = invoiceCaptor.getAllValues().get(0);
+
+        assertEquals(user, savedInvoice.getUserEntity());
+        assertEquals(estimate.getStartDate(), savedInvoice.getStartDate());
+        assertEquals(estimate.getEndDate(), savedInvoice.getEndDate());
+        assertEquals(estimate.getBaseSalary(), savedInvoice.getBaseSalary());
+        assertEquals(estimate.getDeductedAmount(), savedInvoice.getDeductedAmount());
+        assertEquals(estimate.getInterestAmount(), savedInvoice.getInterestAmount());
+
+        // Check if user's total month participated is updated
+        assertEquals(18, user.getTotalMonthParticipated()); // 12 + 6 months
+
+        // Verify that userService.save was called with the updated user
+        verify(userService).save(user);
+
+        // Verify the second save call is for setting the invoice as paid
+        BhxhInvoiceEntity paidInvoice = invoiceCaptor.getAllValues().get(1);
+        assertEquals(savedInvoice, paidInvoice);
+    }
+
 }

@@ -36,7 +36,10 @@ dependencies {
     testImplementation 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    // Mockito dependencies
     testImplementation 'org.mockito:mockito-core:3.6.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:3.6.0'
 }
