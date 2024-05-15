@@ -44,7 +44,7 @@ public class InsuranceService {
                 debtInterest,
                 baseSalary,
                 getStartDate(user),
-                getStartDate(user).plusMonths(monthsPaying - 1)
+                getStartDate(user).plusMonths(monthsPaying -1)
         );
     }
 
